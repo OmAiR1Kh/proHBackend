@@ -1,24 +1,25 @@
 const { Router } = require("express");
 const Doctor = require("../Models/doctors");
 const { createDoctor, updateDoctor, deleteDoctor, getDoctor, getAllDoctors } = require ("../Controllers/doctorControllers");
+const { verifyAdmin, verifyToken } = require("../utils/verifyToken");
 
 const router = Router();
 
 // CREATE
 
-router.post("/create", createDoctor);
+router.post("/create", verifyAdmin, createDoctor);
 
 // UPDATE
 
-router.put("/update/:id", updateDoctor);
+router.put("/update/:id", verifyAdmin, updateDoctor);
 // DELETE
 
-router.delete("/delete/:id", deleteDoctor);
+router.delete("/delete/:id", verifyAdmin, deleteDoctor);
 // GET
 
-router.get("/:id", getDoctor);
+router.get("/:id", verifyToken, getDoctor);
 // GET ALL
 
-router.get("/", getAllDoctors);
+router.get("/", verifyAdmin, getAllDoctors);
 
 module.exports = router;

@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 require("dotenv").config();
 const mongoose = require("mongoose");
+const cookieParser = require("cookie-parser");
 
 const authRoutes = require("./Routes/auth");
 const docRoutes = require("./Routes/doctors");
@@ -12,26 +13,17 @@ const usersRoutes = require("./Routes/users");
 const app = express();
 app.use(bodyParser())
 app.use(cors())
-
+app.use(cookieParser())
 
 app.use(express.json())
+
+// Express APIs
 app.use('/api/auth', authRoutes)
 app.use('/api/doctors', docRoutes)
 app.use('/api/users', usersRoutes)
 app.use('/api/sessions', sessionsRoutes)
 
-// error handlers
-app.use((err, req, res, next)=>{
-  const errStatus = err.status || 500
-  const errMessage = err.message || 'something went wrong'
-  return res.status(errStatus).json({
-    success: false,
-    status: errStatus,
-    message: errMessage,
-    stack : err.stack
-  })
-});
-
+// DB Connection
 mongoose
   .connect(process.env.DATABASE_URL)
   .then(() => {
