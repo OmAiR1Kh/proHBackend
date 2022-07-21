@@ -11,7 +11,6 @@ const sessionsRoutes = require("./Routes/sessions");
 const usersRoutes = require("./Routes/users");
 
 const app = express();
-app.use(bodyParser())
 app.use(cors())
 app.use(cookieParser())
 

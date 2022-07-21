@@ -1,6 +1,6 @@
 const {Router} = require('express')
-const { register, login, updateUser, deleteUser, getUser, getAllusers } = require('../Controllers/authControllers')
-const {verifyToken, verifyUser, verifyAdmin} = require('../utils/verifyToken')
+const { register, login, updateUser, updatePassword,deleteUser, getUser, getAllusers } = require('../Controllers/authControllers')
+const { verifyUser, verifyAdmin} = require('../utils/verifyToken')
 
 const router = Router()
 
@@ -18,21 +18,23 @@ const router = Router()
 //     res.send('Hello Admin you are logged in and authorized to access everything')
 // })
 
-// CREATE
-
+// CREATE AND LOGIN
 router.post('/register', register)
 router.post('/login', login)
+
 // UPDATE
-
 router.put('/edit/:id', verifyUser, updateUser)
+
+// UPDATE PASSWORD
+router.post('/editpass/:id', verifyUser, updatePassword) 
+
 // DELETE
-
 router.delete('/delete', verifyUser, deleteUser)
+
 // GET
-
 router.get('/:id', verifyUser, getUser)
-// GET ALL
 
+// GET ALL
 router.get('/', verifyAdmin, getAllusers)
 
 module.exports = router

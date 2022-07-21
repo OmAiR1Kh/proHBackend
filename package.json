@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.0",
     "concurrently": "^7.2.2",
@@ -20,6 +21,7 @@
     "https-error": "^1.0.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.4.4",
-    "nodemon": "^2.0.19"
+    "nodemon": "^2.0.19",
+    "validator": "^13.7.0"
   }
 }

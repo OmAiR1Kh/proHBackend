@@ -1,4 +1,7 @@
 const { Schema, model } = require("mongoose");
+const validator = require("validator");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const DoctorSchema = new Schema({
   name: {
@@ -11,7 +14,10 @@ const DoctorSchema = new Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: [true, "Please enter a valid password"],
+    minlength: [6, "minimum Password length is 6 characters"],
+    maxlength: [100, "maximum Password length is 30 characters"],
+    select: false,
   },
   phone: {
     type: Number,
@@ -21,6 +27,16 @@ const DoctorSchema = new Schema({
     type: String,
     required: true,
   },
-});
+  resetPasswordToken: String,
+  resetPasswordExpire: Date,
+}, { timestamps: true});
+
+DoctorSchema.pre('save', async function (next) {  // can't use arrow function here
+  if (!this.isModified('password')) {
+      next();
+  }
+
+  this.password = await bcrypt.hash(this.password, 12) // I determined the salt is used
+})
 
 module.exports = model("doctor", DoctorSchema);
