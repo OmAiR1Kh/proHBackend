@@ -9,6 +9,7 @@ const authRoutes = require("./Routes/auth");
 const docRoutes = require("./Routes/doctors");
 const sessionsRoutes = require("./Routes/sessions");
 const usersRoutes = require("./Routes/users");
+const reportRoutes = require("./Routes/reports");
 
 const app = express();
 app.use(cors())
@@ -21,6 +22,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/doctors', docRoutes)
 app.use('/api/users', usersRoutes)
 app.use('/api/sessions', sessionsRoutes)
+app.use('/api/reports', reportRoutes)
 
 // DB Connection
 mongoose

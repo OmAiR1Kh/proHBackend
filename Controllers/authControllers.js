@@ -64,7 +64,6 @@ const login = async (req, res, next) => {
 };
 
 const updatePassword = async (req, res, next) => {
-  console.log(req.params.id)
   try {
     const user = await User.findById(req.params.id);
     console.log(user)

@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const Doctor = require("../Models/doctors");
-const { createDoctor, updateDoctor, deleteDoctor, getDoctor, getAllDoctors, docLogin } = require ("../Controllers/doctorControllers");
+const { createDoctor, updateDoctor, deleteDoctor, getDoctor, getAllDoctors, docLogin, updatePassword } = require ("../Controllers/doctorControllers");
 const { verifyAdmin, verifyToken, verifyDoctor } = require("../utils/verifyToken");
 
 const router = Router();
@@ -10,6 +10,8 @@ const router = Router();
 router.post("/create", verifyAdmin, createDoctor);
 router.post('/login', docLogin )
 
+// UPDATE PASSWORD
+router.post('/updatepass/:id', verifyDoctor, updatePassword)
 // UPDATE
 
 router.put("/update/:id", verifyDoctor, updateDoctor);
@@ -21,6 +23,6 @@ router.delete("/delete/:id", verifyAdmin, deleteDoctor);
 router.get("/:id", verifyToken, getDoctor);
 // GET ALL
 
-router.get("/", verifyAdmin, getAllDoctors);
+router.get("/", verifyToken, getAllDoctors);
 
 module.exports = router;

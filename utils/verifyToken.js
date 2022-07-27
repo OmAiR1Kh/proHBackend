@@ -21,7 +21,7 @@ const verifyUser = (req, res, next) => {
   });
 };
 const verifyDocToken = (req, res, next) => {
-  const token = req.cookies.access_token;
+  const token = req.cookies.doctor_token;
   if (!token) return next(createError(401, "you are not authenticated"));
   jwt.verify(token, process.env.JWT, (err, doctor) => {
     if (err) return next(createError(403, "Token not valid"));
@@ -30,7 +30,7 @@ const verifyDocToken = (req, res, next) => {
   });
 };
 const verifyAdmin = (req, res, next) => {
-    verifyDocToken(req, res, next, () => {
+    verifyToken(req, res, next, () => {
         if (req.doctor.id === req.params.id || req.user.isAdmin) {
           next();
         } else {
@@ -39,7 +39,7 @@ const verifyAdmin = (req, res, next) => {
       });
 };
 const verifyDoctor = (req, res, next) => {
-  verifyToken(req, res, next, () => {
+  verifyDocToken(req, res, next, () => {
     if (req.doctor || req.user.isAdmin) {
       next();
     } else {

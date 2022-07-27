@@ -2,12 +2,13 @@ const Doctor = require("../Models/doctors");
 const bcrypt = require("bcrypt");
 const createError = require("../utils/error");
 const jwt = require('jsonwebtoken');
-const doctors = require("../Models/doctors");
 
 const createDoctor = async (req, res, next) => {
   try {
     const newDoctor = new Doctor({
-      name: req.body.name,
+      fname: req.body.fname,
+      lname: req.body.lname,
+      username: req.body.username,
       email: req.body.email,
       password: req.body.password,
       phone: req.body.phone,
@@ -24,16 +25,16 @@ const createDoctor = async (req, res, next) => {
 
 const docLogin = async (req, res, next) => {
   try {
-    const doctor = await Doctor.findOne({ email: req.body.email });
+    const email = req.body.email;
+    const pass = req.body.password;
+    console.log(`Pass == ${pass}`);
+    const doctor = await Doctor.findOne({ email });
     if (!doctor) {
       return next(createError(404, "doctor not found"));
     }
-    const isPasswordCorrect = await bcrypt.compare(
-      req.body.password,
-      doctor.password
-    );
+    const isPasswordCorrect = await doctor.comparePassword(pass);
     if(!isPasswordCorrect) {
-      return next(createError(400, "Email or Password incorrect"));
+      return next(createError(401, "Email or Password incorrect"));
     }
     const token = jwt.sign(
       { id: doctor._id },
@@ -51,26 +52,26 @@ const docLogin = async (req, res, next) => {
   }
 };
 
+const updatePassword = async (req, res, next) => {
+  console.log(req.params.id)
+  try {
+    const user = await Doctor.findById(req.params.id);
+    console.log(user)
+    const updatePassword = Doctor.findByIdAndUpdate(req.params.id, {password: req.body.password}, {new: true} )
+    res.status(200).json({msg: "Password updated successfully.", data: user});
+  } catch (error) {
+    next(error);
+  }
+};
+
 const updateDoctor = async (req, res, next) => {
   try {
-    const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync(req.body.password, salt);
-    // const doctor = doctor.findById('')
-
-    // const isPasswordChanged = await bcrypt.compare(
-    //   req.body.password,
-    //   doctor.password
-    // )
-
     const updatedDoctor = await Doctor.findByIdAndUpdate(
       req.params.id,
       { $set: req.body },
-      { $set: req.body.password},
       { new: true }
     );
-    
-
-    res.status(200).json(updatedDoctor);
+    res.status(200).json(updatedDoctor);    
   } catch (error) {
     next(error);
   }
@@ -106,6 +107,7 @@ const getAllDoctors = async (req, res, next) => {
 module.exports = {
   createDoctor,
   updateDoctor,
+  updatePassword,
   deleteDoctor,
   getDoctor,
   getAllDoctors,

@@ -35,6 +35,6 @@ router.delete('/delete', verifyUser, deleteUser)
 router.get('/:id', verifyUser, getUser)
 
 // GET ALL
-router.get('/', verifyAdmin, getAllusers)
+router.get('/', getAllusers)
 
 module.exports = router
